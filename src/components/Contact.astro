@@ -31,7 +31,8 @@
       </div>
 
       <div class="form-container">
-        <form class="contact-form">
+        <form class="contact-form" id="contactForm">
+          <div id="formMessage" class="form-message"></div>
           <div class="form-grid">
             <div class="form-group">
               <label for="name">Full Name</label>
@@ -88,7 +89,10 @@
             <label for="message">Your Message</label>
             <textarea id="message" name="message" rows="4" placeholder="Tell us about your career goals..."></textarea>
           </div>
-          <button type="submit" class="submit-btn">Send Application</button>
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">Send Application</span>
+            <span class="btn-loading" style="display: none;">Sending...</span>
+          </button>
         </form>
       </div>
     </div>
@@ -156,6 +160,77 @@
       document.querySelectorAll('.options-container').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.chevron').forEach(c => c.classList.remove('rotate'));
     });
+  });
+</script>
+
+<script>
+  // Handle contact form submission
+  const contactForm = document.getElementById('contactForm') as HTMLFormElement;
+  const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+  const btnText = submitBtn.querySelector('.btn-text') as HTMLSpanElement;
+  const btnLoading = submitBtn.querySelector('.btn-loading') as HTMLSpanElement;
+  const formMessage = document.getElementById('formMessage') as HTMLDivElement;
+  const resumeInput = document.getElementById('resume') as HTMLInputElement;
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Clear previous messages
+    formMessage.textContent = '';
+    formMessage.className = 'form-message';
+
+    // Validate resume file size
+    if (resumeInput.files && resumeInput.files[0]) {
+      const file = resumeInput.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        formMessage.textContent = 'Resume file size must be less than 5MB';
+        formMessage.classList.add('error');
+        return;
+      }
+    }
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'inline';
+    
+    try {
+      const formData = new FormData(contactForm);
+      
+      const response = await fetch('/api/contact.json', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        formMessage.textContent = 'Thank you! Your application has been submitted successfully. We\'ll get back to you within 24 hours.';
+        formMessage.classList.add('success');
+        contactForm.reset();
+        
+        // Reset custom selects
+        document.querySelectorAll('.selected-text').forEach(el => {
+          if (el instanceof HTMLElement) {
+            el.textContent = el.closest('.custom-select')?.id === 'program-select' ? 'Select a program' : 'Select year';
+            el.style.color = '#9ca3af';
+          }
+        });
+      } else {
+        formMessage.textContent = data.error || 'Something went wrong. Please try again.';
+        formMessage.classList.add('error');
+      }
+    } catch (error) {
+      formMessage.textContent = 'Network error. Please check your connection and try again.';
+      formMessage.classList.add('error');
+    } finally {
+      // Reset loading state
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+    }
   });
 </script>
 
@@ -234,6 +309,27 @@
     padding: 3rem;
     border-radius: 1.5rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+
+  .form-message.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+    display: block;
+  }
+
+  .form-message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    display: block;
   }
 
   .form-grid {

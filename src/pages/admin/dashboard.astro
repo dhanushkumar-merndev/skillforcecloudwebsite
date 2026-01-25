@@ -1,0 +1,286 @@
+---
+const { cookies, redirect } = Astro;
+
+// Check authentication
+const sessionId = cookies.get('admin_session')?.value;
+if (!sessionId) {
+  return redirect('/admin/login');
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin Dashboard - Skill Force Cloud</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="dashboard">
+      <header class="dashboard-header">
+        <div class="header-content">
+          <div class="logo">
+            <img src="/logo.svg" alt="Skill Force Cloud" width="40" height="40" />
+            <h1>Admin Dashboard</h1>
+          </div>
+          <button id="logoutBtn" class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <main class="dashboard-main">
+        <div class="stats">
+          <div class="stat-card">
+            <h3>Total Submissions</h3>
+            <p id="totalCount" class="stat-number">-</p>
+          </div>
+        </div>
+
+        <div class="submissions-section">
+          <h2>Contact Form Submissions</h2>
+          <div id="loading" class="loading">Loading submissions...</div>
+          <div id="error" class="error"></div>
+          <div id="tableContainer" class="table-container" style="display: none;">
+            <table id="submissionsTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Program</th>
+                  <th>Passout Year</th>
+                  <th>Resume</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      async function loadSubmissions() {
+        const loading = document.getElementById('loading') as HTMLDivElement;
+        const error = document.getElementById('error') as HTMLDivElement;
+        const tableContainer = document.getElementById('table Container') as HTMLDivElement;
+        const tableBody = document.getElementById('tableBody') as HTMLTableSectionElement;
+        const totalCount = document.getElementById('totalCount') as HTMLParagraphElement;
+
+        try {
+          const response = await fetch('/api/admin/submissions.json');
+          const data = await response.json();
+
+          if (!data.success) {
+            throw new Error(data.error || 'Failed to fetch submissions');
+          }
+
+          loading.style.display = 'none';
+          tableContainer.style.display = 'block';
+
+          const submissions = data.submissions || [];
+          totalCount.textContent = submissions.length.toString();
+
+          if (submissions.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">No submissions yet</td></tr>';
+            return;
+          }
+
+          tableBody.innerHTML = submissions.map((sub: any) => {
+            const date = new Date(sub.created_at).toLocaleString();
+            const resumeLink = sub.resume_url 
+              ? `<a href="${sub.resume_url}" target="_blank" class="resume-link">Download</a>` 
+              : '-';
+            return `
+              <tr>
+                <td>${date}</td>
+                <td>${sub.full_name}</td>
+                <td>${sub.email}</td>
+                <td>${sub.phone}</td>
+                <td>${sub.program}</td>
+                <td>${sub.passout_year}</td>
+                <td>${resumeLink}</td>
+                <td>${sub.message || '-'}</td>
+              </tr>
+            `;
+          }).join('');
+
+        } catch (err) {
+          loading.style.display = 'none';
+          error.textContent = err instanceof Error ? err.message : 'An error occurred';
+        }
+      }
+
+      document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+        await fetch('/api/auth/logout.json', { method: 'POST' });
+        window.location.href = '/admin/login';
+      });
+
+      loadSubmissions();
+    </script>
+
+    <style>
+      :root {
+        --primary: #18829c;
+        --secondary: #214181;
+        --text-main: #374151;
+        --text-dark: #111827;
+        --bg-white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f9fafb;
+        min-height: 100vh;
+      }
+
+      .dashboard-header {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 1rem 0;
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .btn-logout {
+        padding: 0.5rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-logout:hover {
+        filter: brightness(0.9);
+      }
+
+      .dashboard-main {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card h3 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .submissions-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .submissions-section h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+      }
+
+      .loading, .error {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-main);
+      }
+
+      .error {
+        color: #dc2626;
+      }
+
+      .table-container {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      th {
+        font-weight: 600;
+        color: var(--text-dark);
+        background: #f9fafb;
+      }
+
+      td {
+        color: var(--text-main);
+      }
+
+      tr:hover {
+        background: #f9fafb;
+      }
+
+      .resume-link {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: underline;
+      }
+
+      .resume-link:hover {
+        color: var(--secondary);
+      }
+    </style>
+  </body>
+</html>

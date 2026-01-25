@@ -1,0 +1,201 @@
+---
+const { cookies, redirect } = Astro;
+
+// Check if already logged in
+const sessionId = cookies.get('admin_session')?.value;
+if (sessionId) {
+  return redirect('/admin/dashboard');
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin Login - Skill Force Cloud</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="logo">
+          <img src="/logo.svg" alt="Skill Force Cloud" width="60" height="60" />
+          <h1>Admin Login</h1>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              required 
+              autocomplete="username"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              autocomplete="current-password"
+            />
+          </div>
+
+          <div id="error" class="error"></div>
+          
+          <button type="submit" class="btn-login">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('loginForm') as HTMLFormElement;
+      const errorDiv = document.getElementById('error') as HTMLDivElement;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorDiv.textContent = '';
+        
+        const formData = new FormData(form);
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        try {
+          const response = await fetch('/api/auth/login.json', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            window.location.href = '/admin/dashboard';
+          } else {
+            errorDiv.textContent = data.error || 'Login failed';
+          }
+        } catch (error) {
+          errorDiv.textContent = 'An error occurred. Please try again.';
+        }
+      });
+    </script>
+
+    <style>
+      :root {
+        --primary: #18829c;
+        --secondary: #214181;
+        --text-main: #374151;
+        --text-dark: #111827;
+        --bg-white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 450px;
+        padding: 2rem;
+      }
+
+      .login-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo img {
+        margin-bottom: 1rem;
+      }
+
+      .logo h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .error {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        min-height: 1.25rem;
+      }
+
+      .btn-login {
+        width: 100%;
+        padding: 0.875rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-login:hover {
+        filter: brightness(0.9);
+        transform: translateY(-1px);
+      }
+
+      .btn-login:active {
+        transform: translateY(0);
+      }
+    </style>
+  </body>
+</html>
