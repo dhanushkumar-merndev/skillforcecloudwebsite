@@ -1,0 +1,151 @@
+---
+const testimonials = [
+  {
+    name: "Rahul Sharma",
+    role: "Full Stack Developer @ Tech Mahindra",
+    text: "The MERN stack program was incredibly comprehensive. The hands-on projects helped me land my dream job within 2 months of completion.",
+    image: "https://i.pravatar.cc/150?u=rahul",
+  },
+  {
+    name: "Anjali Gupta",
+    role: "Salesforce Admin @ Wipro",
+    text: "Skill Force Cloud's Salesforce training is top-notch. The instructors are experts and the support is always there when you need it.",
+    image: "https://i.pravatar.cc/150?u=anjali",
+  },
+  {
+    name: "Vikram Singh",
+    role: "DevOps Engineer @ Cognizant",
+    text: "Transitioning to DevOps was smooth thanks to the structured curriculum and mock interviews. Highly recommend their placement support.",
+    image: "https://i.pravatar.cc/150?u=vikram",
+  },
+];
+---
+
+<section class="testimonials" id="testimonials" data-scroll-offset="-100">
+  <div class="container">
+    <div class="section-header">
+      <h2>Success Stories</h2>
+      <p>Hear from our alumni who have successfully transitioned into high-growth tech careers.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      {testimonials.map((t) => (
+        <div class="testimonial-card">
+          <div class="quote-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.1"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          </div>
+          <p class="testimonial-text">"{t.text}"</p>
+          <div class="user-info">
+            <img src={t.image} alt={t.name} class="user-avatar" />
+            <div class="user-details">
+              <span class="user-name">{t.name}</span>
+              <span class="user-role">{t.role}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    padding: 6rem 0;
+    background-color: #f9fafb;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 4rem auto;
+  }
+
+  .section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 1.25rem;
+  }
+
+  .section-header p {
+    font-size: 1.125rem;
+    color: var(--text-main);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .testimonial-card {
+    background: #f9fafb;
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .quote-icon {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+  }
+
+  .testimonial-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-main);
+    font-style: italic;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .user-name {
+    display: block;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 1rem;
+  }
+
+  .user-role {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  @media (max-width: 992px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .testimonials-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

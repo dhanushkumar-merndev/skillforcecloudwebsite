@@ -1,0 +1,220 @@
+---
+---
+
+<header class="header">
+  <div class="container">
+    <a href="/" class="logo">
+      <img src="/logo.svg" alt="Skill Force Cloud Logo" width="70" height="70" class="logo-img" />
+      <img src="/text.svg" alt="Skill Force Cloud" height="20" class="logo-text-img" />
+    </a>
+
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="/#programs">Programs</a></li>
+        <li><a href="/#placement">Placement</a></li>
+        <li><a href="/#lms">LMS</a></li>
+        <li><a href="/#testimonials">Testimonials</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector('.header');
+  let lastScroll = 0;
+  let isNavigating = false;
+  
+  // Listen for navigation events
+  window.addEventListener('navigation-start', () => {
+    isNavigating = true;
+  });
+
+  window.addEventListener('navigation-end', () => {
+    isNavigating = false;
+  });
+  
+  if (header) {
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      const threshold = window.innerHeight * 0.3; 
+
+      if (currentScroll <= 0) {
+        header.classList.remove('hidden');
+        header.classList.remove('scrolled');
+        return;
+      }
+      
+      if (currentScroll > 50) {
+        header.classList.add('scrolled');
+      }
+
+      // Don't hide header during navigation
+      if (isNavigating) {
+        header.classList.remove('hidden');
+        lastScroll = currentScroll;
+        return;
+      }
+
+      // Hide if scrolled down more than 30vh AND scrolling down
+      if (currentScroll > threshold && currentScroll > lastScroll) {
+        header.classList.add('hidden');
+      } else if (currentScroll < lastScroll) {
+        // Show if scrolling up
+        header.classList.remove('hidden');
+      }
+
+      lastScroll = currentScroll;
+    });
+  }
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.querySelector('.nav-links');
+
+  menuToggle?.addEventListener('click', () => {
+    navLinks?.classList.toggle('active');
+    menuToggle.classList.toggle('open');
+  });
+</script>
+
+<style>
+  .header {
+    width: 100%;
+    height: 10vh;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .header.hidden {
+    transform: translateY(-100%);
+  }
+  
+  .header.scrolled {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .logo-text-img {
+    height: 21px;
+    width: auto;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  .nav-links a {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: all 0.2s;
+    position: relative;
+    padding: 0.5rem 0;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--primary);
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1001;
+  }
+
+  .mobile-menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text-dark);
+    transition: 0.3s;
+  }
+
+  /* Mobile Open State */
+  .mobile-menu-toggle.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .mobile-menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-toggle.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      background-color: #fff;
+      flex-direction: column;
+      padding: 2rem;
+      gap: 1.5rem;
+      border-bottom: 1px solid #f3f4f6;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    .nav-links.active {
+      display: flex;
+    }
+    
+    .mobile-menu-toggle {
+      display: flex;
+    }
+  }
+</style>
