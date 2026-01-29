@@ -105,7 +105,10 @@
           </div>
           <button type="submit" class="submit-btn" id="submitBtn">
             <span class="btn-text">Send Application</span>
-            <span class="btn-loading" style="display: none;">Sending...</span>
+            <span class="btn-loading" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinner"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              <span>Sending...</span>
+            </span>
           </button>
         </form>
       </div>
@@ -253,20 +256,45 @@
       }
     }
 
+    const toggleInputs = (disabled: boolean) => {
+      const elements = contactForm.querySelectorAll('input, select, textarea, button:not(.menu-close)');
+      elements.forEach(el => {
+        if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement || el instanceof HTMLButtonElement) {
+          el.disabled = disabled;
+        }
+      });
+    };
+
     // --- OPTIMISTIC UI: Instant Feedback ---
-    formMessage.textContent = 'Thank you! Your application is being processed.';
+    formMessage.textContent = 'Your application is being processed...';
     formMessage.className = 'form-message success';
     
-    // Auto-hide message after 5 seconds
-    const hideMessage = () => {
+    // Change button to sending state
+    const originalBtnText = btnText.textContent;
+    btnText.style.display = 'none';
+    btnLoading.style.display = 'flex';
+    btnLoading.style.alignItems = 'center';
+    btnLoading.style.justifyContent = 'center';
+    btnLoading.style.gap = '0.5rem';
+    
+    // Disable all inputs
+    toggleInputs(true);
+
+    // Auto-hide message and button reset after 3 seconds
+    const hideMessageAndResetBtn = (newBtnText: string | null = null) => {
       setTimeout(() => {
         if (formMessage.classList.contains('success')) {
           formMessage.textContent = '';
           formMessage.className = 'form-message';
         }
-      }, 5000);
+        btnText.textContent = newBtnText || originalBtnText;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+        
+        // Re-enable all inputs
+        toggleInputs(false);
+      }, 3000);
     };
-    hideMessage();
     
     // Save current form data in case we need to retry
     const lastSubmission = formData;
@@ -294,7 +322,7 @@
       const data = await res.json();
       if (data.success) {
         formMessage.textContent = 'Thank you! Your application has been submitted successfully.';
-        hideMessage(); // Refresh timer for the final success message
+        hideMessageAndResetBtn('Send Application '); // Reset with success label
       } else {
         throw new Error(data.error || 'Server error');
       }
@@ -306,15 +334,19 @@
       const errorModal = document.getElementById('errorModal');
       const modalErrorMessage = document.getElementById('modalErrorMessage');
       if (errorModal && modalErrorMessage) {
-        modalErrorMessage.textContent = error.message.includes('Fetch') 
-          ? 'Network error. Please check your internet connection and try again.' 
-          : 'We couldn’t submit your application right now. Please try again in a few minutes.';
+        modalErrorMessage.textContent = 'We couldn’t submit your application right now. Please try again in a few minutes.';
         errorModal.classList.add('show');
       }
 
-      // Restore the message to show error (don't auto-hide errors so user sees them)
+      // Restore the message and button to show error
       formMessage.textContent = 'Last submission failed. Please try again.';
       formMessage.className = 'form-message error';
+      btnText.textContent = originalBtnText;
+      btnText.style.display = 'inline';
+      btnLoading.style.display = 'none';
+      
+      // Re-enable all inputs on error
+      toggleInputs(false);
     });
   });
 
@@ -415,6 +447,26 @@
     padding: 3rem;
     border-radius: 1.5rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .form-message {

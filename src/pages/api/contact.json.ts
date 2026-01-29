@@ -30,7 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Prepare Telegram message
     const telegramMessage = `
-<b>🚀 New Contact Submission</b>
+<b>New Contact Submission</b>
 ━━━━━━━━━━━━━━━━━━
 <b>Name:</b> ${submission.full_name}
 <b>Email:</b> ${submission.email}
@@ -40,6 +40,7 @@ export const POST: APIRoute = async ({ request }) => {
 <b>Message:</b>
 ${submission.message}
 ━━━━━━━━━━━━━━━━━━
+${"Date:"+new Date().toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')} ${"Time:"+new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' })}
     `.trim();
 
     // Handle resume file

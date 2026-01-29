@@ -23,6 +23,12 @@ import Header from '../components/Header.astro';
 		<slot />
 		<script>
 			import Lenis from 'lenis';
+			import { inject } from '@vercel/analytics';
+			import { injectSpeedInsights } from '@vercel/speed-insights';
+
+			inject();
+			injectSpeedInsights();
+
 			const lenis = new Lenis();
 
 			function raf(time: number) {
