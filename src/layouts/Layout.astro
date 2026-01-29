@@ -1,5 +1,7 @@
 ---
 import Header from '../components/Header.astro';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 ---
 
 <!doctype html>
@@ -21,13 +23,11 @@ import Header from '../components/Header.astro';
 	<body>
 		<Header />
 		<slot />
+		<Analytics />
+		<SpeedInsights />
 		<script>
 			import Lenis from 'lenis';
-			import { inject } from '@vercel/analytics';
-			import { injectSpeedInsights } from '@vercel/speed-insights';
-
-			inject();
-			injectSpeedInsights();
+		
 
 			const lenis = new Lenis();
 
