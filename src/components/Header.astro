@@ -34,72 +34,74 @@
 </header>
 
 <script>
-  const header = document.querySelector('.header');
-  let lastScroll = 0;
-  let isNavigating = false;
-  
-  // Listen for navigation events
-  window.addEventListener('navigation-start', () => {
-    isNavigating = true;
-  });
-
-  window.addEventListener('navigation-end', () => {
-    isNavigating = false;
-  });
-  
-  if (header) {
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.scrollY;
-      const threshold = window.innerHeight * 0.3; 
-
-      if (currentScroll <= 0) {
-        header.classList.remove('hidden');
-        header.classList.remove('scrolled');
-        return;
-      }
-      
-      if (currentScroll > 50) {
-        header.classList.add('scrolled');
-      }
-
-      // Don't hide header during navigation
-      if (isNavigating) {
-        header.classList.remove('hidden');
-        lastScroll = currentScroll;
-        return;
-      }
-
-      // Hide if scrolled down more than 30vh AND scrolling down
-      if (currentScroll > threshold && currentScroll > lastScroll) {
-        header.classList.add('hidden');
-      } else if (currentScroll < lastScroll) {
-        // Show if scrolling up
-        header.classList.remove('hidden');
-      }
-
-      lastScroll = currentScroll;
+  document.addEventListener('astro:page-load', () => {
+    const header = document.querySelector('.header');
+    let lastScroll = 0;
+    let isNavigating = false;
+    
+    // Listen for navigation events
+    window.addEventListener('navigation-start', () => {
+      isNavigating = true;
     });
-  }
 
-  const menuToggle = document.getElementById('menuToggle');
-  const menuClose = document.getElementById('menuClose');
-  const navLinks = document.querySelector('.nav-links');
+    window.addEventListener('navigation-end', () => {
+      isNavigating = false;
+    });
+    
+    if (header) {
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        const threshold = window.innerHeight * 0.3; 
 
-  menuToggle?.addEventListener('click', () => {
-    navLinks?.classList.toggle('active');
-    menuToggle.classList.toggle('open');
-  });
+        if (currentScroll <= 0) {
+          header.classList.remove('hidden');
+          header.classList.remove('scrolled');
+          return;
+        }
+        
+        if (currentScroll > 50) {
+          header.classList.add('scrolled');
+        }
 
-  menuClose?.addEventListener('click', () => {
-    navLinks?.classList.remove('active');
-    menuToggle?.classList.remove('open');
-  });
+        // Don't hide header during navigation
+        if (isNavigating) {
+          header.classList.remove('hidden');
+          lastScroll = currentScroll;
+          return;
+        }
 
-  // Close menu when clicking a link
-  navLinks?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
+        // Hide if scrolled down more than 30vh AND scrolling down
+        if (currentScroll > threshold && currentScroll > lastScroll) {
+          header.classList.add('hidden');
+        } else if (currentScroll < lastScroll) {
+          // Show if scrolling up
+          header.classList.remove('hidden');
+        }
+
+        lastScroll = currentScroll;
+      });
+    }
+
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuToggle?.addEventListener('click', () => {
+      navLinks?.classList.toggle('active');
+      menuToggle.classList.toggle('open');
+    });
+
+    menuClose?.addEventListener('click', () => {
+      navLinks?.classList.remove('active');
       menuToggle?.classList.remove('open');
+    });
+
+    // Close menu when clicking a link
+    navLinks?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuToggle?.classList.remove('open');
+      });
     });
   });
 </script>

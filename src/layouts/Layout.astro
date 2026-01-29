@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+import { ClientRouter } from 'astro:transitions';
 ---
 
 <!doctype html>
@@ -19,6 +20,7 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<title>Skill Force Cloud</title>
+		<ClientRouter />
 	</head>
 	<body>
 		<Header />
@@ -27,85 +29,98 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 		<SpeedInsights />
 		<script>
 			import Lenis from 'lenis';
-		
+			import { navigate } from 'astro:transitions/client';
 
-			const lenis = new Lenis();
+			if ('scrollRestoration' in history) {
+				history.scrollRestoration = 'manual';
+			}
+
+			let lenis: Lenis;
 
 			function raf(time: number) {
-				lenis.raf(time);
+				lenis?.raf(time);
 				requestAnimationFrame(raf);
 			}
 
 			requestAnimationFrame(raf);
 
-      // Handle hash on page load
-      window.addEventListener('load', () => {
-        const hash = window.location.hash;
-        if (hash && hash !== '#') {
-          // Wait for page to fully render
-          setTimeout(() => {
-            const targetElement = document.querySelector(hash);
-            if (targetElement) {
-              const offset = targetElement.getAttribute('data-scroll-offset');
-              const offsetValue = offset ? parseInt(offset) : -80;
+			document.addEventListener('astro:page-load', () => {
+				// Initialize Lenis
+				lenis = new Lenis();
 
-              // Dispatch navigation start event
-              window.dispatchEvent(new Event('navigation-start'));
+				// Handle hash on page load
+				const hash = window.location.hash;
+				if (hash && hash !== '#') {
+					// Wait for page to fully render
+					setTimeout(() => {
+						const targetElement = document.querySelector(hash);
+						if (targetElement) {
+							const offset = targetElement.getAttribute('data-scroll-offset');
+							const offsetValue = offset ? parseInt(offset) : -80;
 
-              lenis.scrollTo(hash, { 
-                offset: offsetValue,
-                immediate: false,
-                onComplete: () => {
-                  setTimeout(() => {
-                    window.dispatchEvent(new Event('navigation-end'));
-                  }, 100);
-                }
-              });
-            }
-          }, 100);
-        }
-      });
+							// Dispatch navigation start event
+							window.dispatchEvent(new Event('navigation-start'));
 
-      // Handle anchor link clicks (both #hash and /#hash formats)
-      document.querySelectorAll('a[href*="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          const target = e.currentTarget as HTMLAnchorElement;
-          const href = target.getAttribute('href');
-          
-          if (!href || href === '#') return;
+							lenis.scrollTo(hash, { 
+								offset: offsetValue,
+								immediate: false,
+								onComplete: () => {
+									setTimeout(() => {
+										window.dispatchEvent(new Event('navigation-end'));
+										// Remove hash from URL after scroll
+										history.replaceState(null, null, ' ');
+									}, 100);
+								}
+							});
+						}
+					}, 100);
+				} else {
+					// Scroll to top if no hash
+					lenis.scrollTo(0, { immediate: true });
+				}
 
-          // Extract the hash portion
-          const hashIndex = href.indexOf('#');
-          if (hashIndex === -1) return;
+				// Handle anchor link clicks (both #hash and /#hash formats)
+				document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+					anchor.addEventListener('click', (e) => {
+						const target = e.currentTarget as HTMLAnchorElement;
+						const href = target.getAttribute('href');
+						
+						if (!href || href === '#') return;
 
-          const hash = href.substring(hashIndex);
-          const path = href.substring(0, hashIndex);
+						// Extract the hash portion
+						const hashIndex = href.indexOf('#');
+						if (hashIndex === -1) return;
 
-          // If it's a same-page link (starts with # or is /#)
-          if (href.startsWith('#') || (path === '/' && window.location.pathname === '/')) {
-            e.preventDefault();
-            const targetElement = document.querySelector(hash);
-            if (targetElement) {
-              const offset = targetElement.getAttribute('data-scroll-offset');
-              const offsetValue = offset ? parseInt(offset) : -80;
+						const hash = href.substring(hashIndex);
+						const path = href.substring(0, hashIndex);
 
-              // Dispatch navigation start event
-              window.dispatchEvent(new Event('navigation-start'));
+						// If it's a same-page link (starts with # or is /#)
+						if (href.startsWith('#') || (path === '/' && window.location.pathname === '/')) {
+							e.preventDefault();
+							const targetElement = document.querySelector(hash);
+							if (targetElement) {
+								const offset = targetElement.getAttribute('data-scroll-offset');
+								const offsetValue = offset ? parseInt(offset) : -80;
 
-              lenis.scrollTo(hash, { 
-                offset: offsetValue,
-                onComplete: () => {
-                  // Dispatch navigation end event after scroll completes
-                  setTimeout(() => {
-                    window.dispatchEvent(new Event('navigation-end'));
-                  }, 100);
-                }
-              });
-            }
-          }
-          // Otherwise let browser handle the cross-page navigation
-        });
-      });
+								// Dispatch navigation start event
+								window.dispatchEvent(new Event('navigation-start'));
+
+								lenis.scrollTo(hash, { 
+									offset: offsetValue,
+									onComplete: () => {
+										// Dispatch navigation end event after scroll completes
+										setTimeout(() => {
+											window.dispatchEvent(new Event('navigation-end'));
+											history.replaceState(null, null, ' ');
+										}, 100);
+									}
+								});
+							}
+						}
+						// Otherwise let Astro ClientRouter handle the cross-page navigation
+					});
+				});
+			});
 		</script>
 	</body>
 </html>

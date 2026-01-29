@@ -30,22 +30,16 @@
             <span class="dot yellow"></span>
             <span class="dot green"></span>
           </div>
-          <div class="tab">Program.tsx</div>
+          <a
+          href="https://www.nextcareerlabs.online/"
+          class="tab"
+        >
+          Skill Force Cloud LMS
+        </a>
+
         </div>
         <div class="editor-body">
-          <pre><code><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
-
-<span class="keyword">export const</span> <span class="function">CourseCard</span> = (&#123; title, level &#125;) => &#123;
-  <span class="keyword">return</span> (
-    &lt;<span class="tag">div</span> <span class="attr">className</span>=<span class="string">"p-6 bg-white rounded-xl shadow-lg"</span>&gt;
-      &lt;<span class="tag">h3</span>&gt;&#123;title&#125;&lt;/<span class="tag">h3</span>&gt;
-      &lt;<span class="tag">span</span>&gt;Level: &#123;level&#125;&lt;/<span class="tag">span</span>&gt;
-      &lt;<span class="tag">button</span> <span class="attr">className</span>=<span class="string">"mt-4 btn-primary"</span>&gt;
-        Enroll Now
-      &lt;/<span class="tag">button</span>&gt;
-    &lt;/<span class="tag">div</span>&gt;
-  );
-&#125;;</code></pre>
+          <img src="/programs/lms.jpg" alt="LMS Dashboard Preview" style="width: 100%; height: auto; display: block; border-radius: 0.5rem;" />
         </div>
       </div>
     </div>
@@ -111,13 +105,20 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
-  .editor-header {
-    background-color: #2d2d2d;
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+.editor-header {
+  background: rgba(5, 5, 5, 0.55); /* translucent */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
 
   .dots {
     display: flex;
@@ -134,15 +135,20 @@
   .yellow { background-color: #ffbd2e; }
   .green { background-color: #27c93f; }
 
-  .tab {
-    color: #9ca3af;
-    font-size: 0.8125rem;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 0.25rem;
-  }
+ .tab {
+  color: #a1a1aa;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: 0.7rem;
+}
+
+.tab:hover {
+  color: #fff;
+}
 
   .editor-body {
-    padding: 1.5rem;
+    
     font-family: 'Fira Code', 'Courier New', Courier, monospace;
     font-size: 0.9375rem;
     line-height: 1.6;
