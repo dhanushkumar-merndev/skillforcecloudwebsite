@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { supabase } from '../../lib/supabase';
+import { sendToTelegram } from '../../lib/telegram';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 
@@ -13,8 +13,7 @@ export const POST: APIRoute = async ({ request }) => {
       phone: formData.get('phone') as string,
       program: formData.get('program') as string,
       passout_year: formData.get('passout') as string,
-      message: formData.get('message') as string || null,
-      resume_url: null as string | null,
+      message: formData.get('message') as string || 'No message provided',
     };
 
     // Validate required fields
@@ -29,74 +28,46 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // Handle resume file upload
+    // Prepare Telegram message
+    const telegramMessage = `
+<b>🚀 New Contact Submission</b>
+━━━━━━━━━━━━━━━━━━
+<b>Name:</b> ${submission.full_name}
+<b>Email:</b> ${submission.email}
+<b>Phone:</b> ${submission.phone}
+<b>Program:</b> ${submission.program}
+<b>Passout:</b> ${submission.passout_year}
+<b>Message:</b>
+${submission.message}
+━━━━━━━━━━━━━━━━━━
+    `.trim();
+
+    // Handle resume file
     const resumeFile = formData.get('resume') as File;
+    let fileToTelegram = undefined;
+
     if (resumeFile && resumeFile.size > 0) {
-      // Validate file size (5MB limit)
+      // Validate
       if (resumeFile.size > MAX_FILE_SIZE) {
-        return new Response(JSON.stringify({ 
-          success: false, 
-          error: 'Resume file size must be less than 5MB' 
-        }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        });
+        return new Response(JSON.stringify({ success: false, error: 'File too large (>5MB)' }), { status: 400 });
       }
-
-      // Validate file type (PDF only)
       if (resumeFile.type !== 'application/pdf') {
-        return new Response(JSON.stringify({ 
-          success: false, 
-          error: 'Only PDF files are allowed for resume' 
-        }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        });
+        return new Response(JSON.stringify({ success: false, error: 'Only PDF allowed' }), { status: 400 });
       }
 
-      // Generate unique filename
-      const timestamp = Date.now();
-      const sanitizedEmail = submission.email.replace(/[^a-zA-Z0-9]/g, '_');
-      const fileName = `${sanitizedEmail}_${timestamp}.pdf`;
-
-      // Upload to Supabase Storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('resumes')
-        .upload(fileName, resumeFile, {
-          contentType: 'application/pdf',
-          cacheControl: '3600',
-        });
-
-      if (uploadError) {
-        console.error('File upload error:', uploadError);
-        return new Response(JSON.stringify({ 
-          success: false, 
-          error: 'Failed to upload resume' 
-        }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('resumes')
-        .getPublicUrl(fileName);
-
-      submission.resume_url = publicUrl;
+      fileToTelegram = {
+        blob: resumeFile,
+        name: `Resume_${submission.full_name.replace(/\s+/g, '_')}.pdf`
+      };
     }
 
-    // Insert into Supabase
-    const { data, error } = await supabase
-      .from('contact_submissions')
-      .insert([submission])
-      .select();
+    // Send to Telegram
+    const sent = await sendToTelegram(telegramMessage, fileToTelegram);
 
-    if (error) {
-      console.error('Supabase error:', error);
+    if (!sent) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'Failed to submit form' 
+        error: 'Failed to notify via Telegram' 
       }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -105,7 +76,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(JSON.stringify({ 
       success: true, 
-      data 
+      message: 'Submission successful' 
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
@@ -122,3 +93,4 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 };
+
