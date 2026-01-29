@@ -3,7 +3,7 @@ import { sendToTelegram } from '../../lib/telegram';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }: { request: Request }) => {
   try {
     const formData = await request.formData();
     
