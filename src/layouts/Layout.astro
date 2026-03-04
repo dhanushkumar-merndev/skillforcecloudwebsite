@@ -1,6 +1,6 @@
 ---
 import Header from '../components/Header.astro';
-import Analytics from '@vercel/analytics/astro';
+import Footer from '../components/Footer.astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { ClientRouter } from 'astro:transitions';
 ---
@@ -25,7 +25,7 @@ import { ClientRouter } from 'astro:transitions';
 	<body>
 		<Header />
 		<slot />
-		<Analytics />
+		<Footer />
 		<SpeedInsights />
 		<script>
 			import Lenis from 'lenis';
@@ -94,8 +94,12 @@ import { ClientRouter } from 'astro:transitions';
 						const hash = href.substring(hashIndex);
 						const path = href.substring(0, hashIndex);
 
-						// If it's a same-page link (starts with # or is /#)
-						if (href.startsWith('#') || (path === '/' && window.location.pathname === '/')) {
+						// Check if it's a same-page link
+						const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+						const linkPath = (path || window.location.pathname).replace(/\/$/, '') || '/';
+						const isSamePage = href.startsWith('#') || linkPath === currentPath;
+
+						if (isSamePage) {
 							e.preventDefault();
 							const targetElement = document.querySelector(hash);
 							if (targetElement) {

@@ -27,28 +27,28 @@ const currentYear = new Date().getFullYear();
       <div class="footer-links">
         <h3>Programs</h3>
         <ul>
-          <li><a href="#">DevOps Training</a></li>
-          <li><a href="#">React Native with MERN</a></li>
-          <li><a href="#">Salesforce Training</a></li>
+          <li><a href="/programs/devops">DevOps Training</a></li>
+          <li><a href="/programs/mern">React Native with MERN</a></li>
+          <li><a href="/programs/salesforce">Salesforce Training</a></li>
         </ul>
       </div>
 
       <div class="footer-links">
         <h3>Company</h3>
         <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Success Stories</a></li>
-          <li><a href="#">Placements</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/about#success-stories">Success Stories</a></li>
+          <li><a href="/#placement">Placements</a></li>
+          <li><a href="/#contact">Contact</a></li>
         </ul>
       </div>
 
       <div class="footer-links">
         <h3>Legal</h3>
         <ul>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/cookies">Cookie Policy</a></li>
         </ul>
       </div>
     </div>
@@ -170,16 +170,20 @@ const currentYear = new Date().getFullYear();
     font-size: 0.875rem;
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1.5rem;
+    }
+
     .footer-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
   }
 
   @media (max-width: 480px) {
-    .footer-grid {
-      grid-template-columns: 1fr;
+    .container {
+      padding: 0 1rem;
     }
   }
 </style>

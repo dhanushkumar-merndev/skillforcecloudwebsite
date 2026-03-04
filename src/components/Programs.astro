@@ -3,19 +3,19 @@ const programs = [
   {
     title: "DevOps Training",
     description: "Master CI/CD, Docker, Kubernetes, and cloud infrastructure with hands-on labs.",
-    image: "/programs/devops.png",
+    image: "/programs/devops.webp",
     link: "/programs/devops"
   },
   {
     title: "React Native with MERN",
-    description: "Build cross-platform mobile apps using React Native and a powerful MERN backend.",
-    image: "/programs/mern.png",
+    description: "Build cross-platform mobile apps using React Native.",
+    image: "/programs/mern.webp",
     link: "/programs/mern"
   },
   {
     title: "Salesforce Training",
-    description: "Expert-led training on Salesforce Admin, Dev, and Lightning Web Components (LWC).",
-    image: "/programs/saleforce.png",
+    description: "Expert-led training on Salesforce Admin, Dev, and Lightning Web Components.",
+    image: "/programs/saleforce.webp",
     link: "/programs/salesforce"
   },
 ];
@@ -169,6 +169,10 @@ const programs = [
   }
 
   @media (max-width: 992px) {
+
+    .programs {
+    padding: 4rem 0;
+  }
     .programs-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -182,6 +186,21 @@ const programs = [
     
     .image-wrapper {
       height: 200px;
+    }
+
+    .program-card{
+      height: 400px;
+    }
+
+    .card-footer{
+      padding-top: 1rem;
+      height: 30px;
+    }
+    .content{
+      height: 210px;
+    }
+    .container{
+      padding: 0 1.5rem;
     }
   }
 </style>

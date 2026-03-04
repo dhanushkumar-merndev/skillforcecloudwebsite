@@ -1,0 +1,345 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About Us | Salesforce LMS">
+  <main class="about-page">
+    <!-- Hero Section -->
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1 class="page-title">Empowering the Next Generation of <span class="brand-text">Salesforce</span> Professionals</h1>
+        <p class="hero-subtitle">
+          Dedicated to bridging the performance gap in the Salesforce ecosystem through world-class training, hands-on learning, and career mentorship.
+        </p>
+      </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-card">
+          <span class="stat-value">10k+</span>
+          <span class="stat-label">Students Trained</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">50+</span>
+          <span class="stat-label">Advanced Courses</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">95%</span>
+          <span class="stat-label">Career Success Rate</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="content-section">
+      <div class="container grid-two">
+        <div class="content-block">
+          <div class="section-badge">Our Mission</div>
+          <h2>Bridging the Talent Gap</h2>
+          <p>
+            At Salesforce LMS, our mission is to democratize high-quality cloud education. We provide aspiring professionals with the tools, knowledge, and community they need to thrive in the world's #1 CRM platform.
+          </p>
+          <p>
+            We focus on practical, real-world skills that translate directly to workplace success, moving beyond simple theory to intensive project-based learning.
+          </p>
+        </div>
+        <div class="image-box">
+           <div class="visual-placeholder">Expert-Led Training</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section id="success-stories" class="stories-section">
+      <div class="container">
+        <div class="section-header center">
+          <div class="section-badge">Testimonials</div>
+          <h2>Success Stories</h2>
+          <p>Meet the professionals who transformed their careers through our programs.</p>
+        </div>
+
+        <div class="stories-grid">
+          <div class="story-item">
+            <div class="story-content">
+              <p>"The curriculum was incredibly thorough. I went from having zero cloud experience to landing a Senior Admin role at a global firm."</p>
+            </div>
+            <div class="story-author">
+              <div class="avatar">SJ</div>
+              <div>
+                <strong>Sarah Johnson</strong>
+                <span>Salesforce Admin @ Accenture</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-item">
+            <div class="story-content">
+              <p>"The hands-on projects were the most valuable part. Being able to demonstrate real solutions during interviews gave me a huge advantage."</p>
+            </div>
+            <div class="story-author">
+              <div class="avatar">MC</div>
+              <div>
+                <strong>Michael Chen</strong>
+                <span>Salesforce Developer @ Deloitte</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-item">
+            <div class="story-content">
+              <p>"Mentorship here is top-notch. They don't just teach you the software; they teach you how to think like a consultant."</p>
+            </div>
+            <div class="story-author">
+              <div class="avatar">PP</div>
+              <div>
+                <strong>Priya Patel</strong>
+                <span>Solution Architect @ CloudKettle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  :root {
+    --brand-primary: #18829c;
+    --brand-dark: #12687d;
+    --brand-light: rgba(24, 130, 156, 0.05);
+    --text-dark: #0f172a;
+    --text-main: #334155;
+    --text-muted: #64748b;
+    --white: #ffffff;
+    --bg-alt: #f8fafc;
+    --border: #e2e8f0;
+  }
+
+  .about-page {
+    padding-top: 5rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 8rem 0 6rem;
+    background: linear-gradient(to bottom, #f0f9ff, var(--white));
+    text-align: center;
+  }
+
+  .page-title {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .brand-text {
+    color: var(--brand-primary);
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 40rem;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    margin-top: -4rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+
+  .stat-card {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Content Section */
+  .content-section {
+    padding: 8rem 0;
+  }
+
+  .grid-two {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  @media (max-width: 992px) {
+    .grid-two { grid-template-columns: 1fr; gap: 3rem; }
+  }
+
+  .section-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: var(--brand-light);
+    color: var(--brand-primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+  }
+
+  .image-box {
+    background: var(--bg-alt);
+    border-radius: 1.5rem;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--border);
+  }
+
+  .visual-placeholder {
+    font-weight: 700;
+    color: var(--brand-primary);
+  }
+
+  /* Stories Section */
+  .stories-section {
+    padding: 8rem 0;
+    background: var(--bg-alt);
+  }
+
+  .section-header {
+    margin-bottom: 4rem;
+  }
+
+  .section-header.center { text-align: center; }
+
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  @media (max-width: 992px) {
+    .stories-grid { grid-template-columns: 1fr; }
+  }
+
+  .story-item {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .story-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .story-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .avatar {
+    width: 3rem;
+    height: 3rem;
+    background: var(--brand-primary);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+
+  .story-author strong {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-dark);
+  }
+
+  .story-author span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  :global(.dark) {
+    --white: #1e293b;
+    --bg-alt: #0f172a;
+    --text-dark: #f8fafc;
+    --text-main: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border: #334155;
+  }
+</style>

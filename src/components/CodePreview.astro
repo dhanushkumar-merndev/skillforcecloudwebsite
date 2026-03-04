@@ -24,22 +24,8 @@
       </div>
       
       <div class="editor-window">
-        <div class="editor-header">
-          <div class="dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <a
-          href="https://www.nextcareerlabs.online/"
-          class="tab"
-        >
-          Skill Force Cloud LMS
-        </a>
-
-        </div>
         <div class="editor-body">
-          <img src="/programs/lms.jpg" alt="LMS Dashboard Preview" style="width: 100%; height: auto; display: block; border-radius: 0.5rem;" />
+          <img src="/programs/lms.webp" alt="LMS Dashboard Preview" style="width: 100%; height: auto; display: block; border-radius: 0.5rem;" />
         </div>
       </div>
     </div>
@@ -99,41 +85,13 @@
   }
 
   .editor-window {
-    background-color: #1e1e1e;
-    border-radius: 0.75rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    border: 1px solid rgba(0,0,0,0.05);
     overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 5px 40px -15px rgba(0, 0, 0, 0.25);
   }
 
-.editor-header {
-  background: rgba(5, 5, 5, 0.55); /* translucent */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-
-  .dots {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-  }
-
-  .red { background-color: #ff5f56; }
-  .yellow { background-color: #ffbd2e; }
-  .green { background-color: #27c93f; }
 
  .tab {
   color: #a1a1aa;
@@ -168,10 +126,17 @@
       grid-template-columns: 1fr;
       text-align: center;
     }
+
+    .code-preview {
+    padding: 4rem 0;
+  }
     
     .feature-list {
       align-items: center;
       margin-bottom: 3rem;
+    }
+    .grid{
+      gap: 1rem;
     }
   }
 </style>
