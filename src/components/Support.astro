@@ -84,7 +84,7 @@ const supportFeatures = [
   .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
   }
 
   .section-header {
@@ -103,6 +103,15 @@ const supportFeatures = [
   .section-header p {
     font-size: 1.125rem;
     color: var(--text-main);
+  }
+
+  @media (max-width: 768px) {
+    .section-header {
+      margin-bottom: 2.5rem;
+    }
+    .section-header h2 {
+      font-size: 2rem;
+    }
   }
 
   .support-grid {

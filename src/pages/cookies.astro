@@ -131,9 +131,9 @@ import Layout from '../layouts/Layout.astro';
 
   .legal-hero {
     background-color: var(--white);
-    padding: 10rem 0 5rem; /* Increased padding */
+    padding: 8rem 0 4rem; /* Increased padding */
     border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
   }
 
   .page-title {
@@ -232,8 +232,16 @@ import Layout from '../layouts/Layout.astro';
 
   @media (max-width: 768px) {
     .legal-content {
-      padding: 2rem 1rem;
-      border-radius: 1.5rem;
+      padding: 2rem 1.25rem;
+      border-radius: 1.25rem;
+    }
+    
+    section {
+      margin-bottom: 3.5rem;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
     }
   }
 
